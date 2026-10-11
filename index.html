@@ -4,25 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MindHub - Gestão Pessoal</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/config.js"></script>
-    <!-- Font Awesome Icons -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { slate: { 950: '#090d16' } } } }
+        };
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="./css/custom.css">
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
 
-    <!-- Sidebar / Navegação Desktop -->
-    <aside id="sidebar" class="w-64 bg-slate-900/90 backdrop-blur-md border-r border-slate-800/80 flex-col justify-between hidden md:flex shrink-0 min-h-screen sticky top-0 z-30">
+    <aside class="w-64 bg-slate-900/90 border-r border-slate-800 flex-col justify-between hidden md:flex shrink-0 min-h-screen sticky top-0 z-30">
         <div>
-            <!-- Logo Header -->
-            <div class="p-6 flex items-center gap-3 border-b border-slate-800/60">
+            <div class="p-6 flex items-center gap-3 border-b border-slate-800">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                     <i class="fa-solid fa-brain text-slate-950 text-xl"></i>
                 </div>
@@ -31,120 +29,33 @@
                     <span class="text-[10px] uppercase font-semibold text-emerald-400 tracking-wider">Gestão Pessoal</span>
                 </div>
             </div>
-
-            <!-- Menus -->
             <nav class="p-4 space-y-1">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active">
-                    <i class="fa-solid fa-chart-pie w-5"></i> Dashboard
-                </button>
-                <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-btn">
-                    <i class="fa-solid fa-list-check w-5"></i> Tarefas & Kanban
-                </button>
-                <button onclick="switchTab('finances')" id="nav-finances" class="nav-btn">
-                    <i class="fa-solid fa-wallet w-5"></i> Financeiro
-                </button>
-                <button onclick="switchTab('habits')" id="nav-habits" class="nav-btn">
-                    <i class="fa-solid fa-fire w-5"></i> Hábitos
-                </button>
-                <button onclick="switchTab('notes')" id="nav-notes" class="nav-btn">
-                    <i class="fa-solid fa-sticky-note w-5"></i> Notas & Ideias
-                </button>
-                <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="nav-btn">
-                    <i class="fa-solid fa-stopwatch w-5"></i> Timer Pomodoro
-                </button>
-                <!-- Wishlist diretamente abaixo de Timer Pomodoro -->
-                <button onclick="switchTab('wishlist')" id="nav-wishlist" class="nav-btn">
-                    <i class="fa-solid fa-wand-magic-sparkles w-5"></i> Lista de Desejos
-                    <span id="badge-wishlist" class="ml-auto bg-emerald-500/20 text-emerald-400 text-xs px-2 py-0.5 rounded-full hidden">0</span>
-                </button>
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active"><i class="fa-solid fa-chart-pie w-5"></i> Dashboard</button>
+                <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-btn"><i class="fa-solid fa-list-check w-5"></i> Tarefas & Kanban</button>
+                <button onclick="switchTab('finances')" id="nav-finances" class="nav-btn"><i class="fa-solid fa-wallet w-5"></i> Financeiro</button>
+                <button onclick="switchTab('habits')" id="nav-habits" class="nav-btn"><i class="fa-solid fa-fire w-5"></i> Hábitos</button>
+                <button onclick="switchTab('notes')" id="nav-notes" class="nav-btn"><i class="fa-solid fa-sticky-note w-5"></i> Notas & Ideias</button>
+                <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="nav-btn"><i class="fa-solid fa-stopwatch w-5"></i> Timer Pomodoro</button>
+                <button onclick="switchTab('wishlist')" id="nav-wishlist" class="nav-btn"><i class="fa-solid fa-wand-magic-sparkles w-5"></i> Lista de Desejos</button>
             </nav>
         </div>
-
-        <!-- Footer da Sidebar / Perfil & Reset -->
-        <div class="p-4 border-t border-slate-800/60 space-y-3">
-            <div class="flex items-center gap-3 p-2 rounded-lg bg-slate-800/40">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-emerald-500/40">
-                <div class="text-sm">
-                    <p class="font-medium text-slate-200 leading-none">Alex Silva</p>
-                    <p class="text-[11px] text-slate-400">Plano Pro • Ativo</p>
-                </div>
-            </div>
-            <button onclick="resetData()" class="w-full text-xs text-slate-400 hover:text-rose-400 flex items-center justify-center gap-2 py-2 rounded border border-slate-800 hover:border-rose-900/50 transition">
+        <div class="p-4 border-t border-slate-800">
+            <button onclick="resetState()" class="w-full text-xs text-slate-400 hover:text-rose-400 flex items-center justify-center gap-2 py-2 rounded border border-slate-800">
                 <i class="fa-solid fa-rotate-left"></i> Resetar Dados
             </button>
         </div>
     </aside>
 
-    <!-- Conteúdo Principal -->
-    <main class="flex-1 flex flex-col min-w-0 pb-20 md:pb-8">
-        <!-- Topbar Mobile -->
-        <header class="md:hidden flex items-center justify-between p-4 bg-slate-900 border-b border-slate-800 sticky top-0 z-20">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
-                    <i class="fa-solid fa-brain text-slate-950 text-sm"></i>
-                </div>
-                <span class="font-bold text-base text-white">MindHub</span>
-            </div>
-            <button id="btn-quick-add" class="p-2 rounded-lg bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition">
-                <i class="fa-solid fa-plus"></i>
-            </button>
-        </header>
-
-        <!-- Container Dinâmico das Abas -->
-        <div class="p-4 md:p-8 max-w-7xl w-full mx-auto space-y-8">
-            <section id="tab-dashboard" class="tab-panel"></section>
-            <section id="tab-tasks" class="tab-panel hidden"></section>
-            <section id="tab-finances" class="tab-panel hidden"></section>
-            <section id="tab-habits" class="tab-panel hidden"></section>
-            <section id="tab-notes" class="tab-panel hidden"></section>
-            <section id="tab-pomodoro" class="tab-panel hidden"></section>
-            <section id="tab-wishlist" class="tab-panel hidden"></section>
-        </div>
+    <main class="flex-1 flex flex-col min-w-0 p-6 max-w-7xl mx-auto space-y-6">
+        <section id="tab-dashboard" class="tab-panel"></section>
+        <section id="tab-tasks" class="tab-panel hidden"></section>
+        <section id="tab-finances" class="tab-panel hidden"></section>
+        <section id="tab-habits" class="tab-panel hidden"></section>
+        <section id="tab-notes" class="tab-panel hidden"></section>
+        <section id="tab-pomodoro" class="tab-panel hidden"></section>
+        <section id="tab-wishlist" class="tab-panel hidden"></section>
     </main>
 
-    <!-- Navigation Mobile Bottom Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 z-30 flex items-center justify-around py-2 px-1 overflow-x-auto scrollbar-none">
-        <button onclick="switchTab('dashboard')" class="mobile-nav-btn text-emerald-400">
-            <i class="fa-solid fa-chart-pie text-lg"></i>
-            <span class="text-[10px]">Dash</span>
-        </button>
-        <button onclick="switchTab('tasks')" class="mobile-nav-btn text-slate-400">
-            <i class="fa-solid fa-list-check text-lg"></i>
-            <span class="text-[10px]">Tarefas</span>
-        </button>
-        <button onclick="switchTab('finances')" class="mobile-nav-btn text-slate-400">
-            <i class="fa-solid fa-wallet text-lg"></i>
-            <span class="text-[10px]">Finanças</span>
-        </button>
-        <button onclick="switchTab('habits')" class="mobile-nav-btn text-slate-400">
-            <i class="fa-solid fa-fire text-lg"></i>
-            <span class="text-[10px]">Hábitos</span>
-        </button>
-        <button onclick="switchTab('notes')" class="mobile-nav-btn text-slate-400">
-            <i class="fa-solid fa-sticky-note text-lg"></i>
-            <span class="text-[10px]">Notas</span>
-        </button>
-        <button onclick="switchTab('pomodoro')" class="mobile-nav-btn text-slate-400">
-            <i class="fa-solid fa-stopwatch text-lg"></i>
-            <span class="text-[10px]">Pomo</span>
-        </button>
-        <button onclick="switchTab('wishlist')" class="mobile-nav-btn text-slate-400">
-            <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-            <span class="text-[10px]">Desejos</span>
-        </button>
-    </nav>
-
-    <!-- Modal Unificado -->
-    <div id="app-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative animate-in fade-in zoom-in duration-150">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-xl"></i>
-            </button>
-            <div id="modal-content"></div>
-        </div>
-    </div>
-
-    <!-- Scripts da Aplicação (Carregamento Modular ES6) -->
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="./js/app.js"></script>
 </body>
 </html>
