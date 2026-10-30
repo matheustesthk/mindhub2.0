@@ -44,7 +44,7 @@ export function renderFinances() {
 
     // Render Finance Main Chart
     const ctx = document.getElementById('finance-chart-main');
-    if (ctx) {
+    if (ctx && typeof Chart !== 'undefined') {
         const categories = {};
         state.finances.filter(f => f.type === 'expense').forEach(f => {
             categories[f.category] = (categories[f.category] || 0) + f.amount;
