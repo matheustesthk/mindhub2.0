@@ -2,3 +2,70 @@
 .nav-btn:hover { background: rgba(30, 41, 59, 0.6); color: #e2e8f0; }
 .nav-btn.active { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); font-weight: 600; }
 .glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+
+/* Botão de recolher e expandir a Sidebar */
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin: 12px auto;
+    border-radius: 10px;
+    color: #94a3b8;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.sidebar-toggle:hover {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+/* Sidebar recolhida */
+.sidebar.sidebar-collapsed {
+    width: 80px;
+}
+
+/* Centralizar os botões da navegação */
+.sidebar.sidebar-collapsed .nav-btn {
+    justify-content: center;
+    padding: 0.75rem 0;
+    gap: 0;
+    font-size: 0;
+}
+
+/* Manter os ícones visíveis */
+.sidebar.sidebar-collapsed .nav-btn i {
+    font-size: 1rem;
+    width: 1.25rem;
+}
+
+/* Esconder o nome e subtítulo do MindHub */
+.sidebar.sidebar-collapsed .sidebar-brand-text {
+    display: none;
+}
+
+/* Centralizar o logotipo */
+.sidebar.sidebar-collapsed .sidebar-brand {
+    justify-content: center;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Botão de resetar dados quando recolhido */
+.sidebar.sidebar-collapsed .sidebar-reset {
+    font-size: 0;
+    gap: 0;
+}
+
+.sidebar.sidebar-collapsed .sidebar-reset i {
+    font-size: 0.875rem;
+}
+
+/* Ajustar o botão de recolher */
+.sidebar.sidebar-collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
+}
