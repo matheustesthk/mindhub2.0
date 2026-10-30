@@ -1,3 +1,5 @@
+import { STORAGE_KEY, defaultState } from './config.js';
+
 let state = loadState();
 let activeWishSavingsId = null;
 
@@ -9,7 +11,7 @@ export function loadState() {
             if (!parsed.wishlist) parsed.wishlist = defaultState.wishlist;
             return parsed; 
         } catch(e) {
-            console.error(e);
+            console.error('Erro ao ler do localStorage:', e);
         }
     }
     return JSON.parse(JSON.stringify(defaultState));
