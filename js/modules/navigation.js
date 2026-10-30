@@ -1,5 +1,3 @@
-import { getState } from '../state.js';
-
 export let currentTab = 'dashboard';
 
 export function switchTab(tab) {
