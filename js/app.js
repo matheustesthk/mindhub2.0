@@ -6,7 +6,7 @@ import { renderTasks, setTaskView, toggleTaskStatus, updateTaskStatus, deleteTas
 import { renderFinances, deleteFinance } from './modules/finances.js';
 import { renderHabits, toggleHabitDay } from './modules/habits.js';
 import { renderNotes, toggleFavoriteNote, deleteNote } from './modules/notes.js';
-import { renderPomodoro, setPomoMode, togglePomodoro, resetPomodoro, updatePomoUI } from './modules/pomodoro.js';
+import { setPomoMode, togglePomodoro, resetPomodoro, updatePomoUI } from './modules/pomodoro.js';
 import { renderWishlist, quickAddSavingsPrompt, toggleWishConquered, deleteWish } from './modules/wishlist.js';
 
 function refreshUI() {
@@ -20,9 +20,10 @@ function refreshUI() {
     updatePomoUI();
 }
 
+// Attach UI Refresh function globally
 window.refreshUI = refreshUI;
 
-// Global window assignments for inline HTML handlers
+// Attach all HTML inline event handlers to window global object
 window.switchTab = switchTab;
 window.toggleMobileMenu = toggleMobileMenu;
 window.resetDataModal = resetState;
@@ -53,6 +54,7 @@ window.quickAddSavingsPrompt = quickAddSavingsPrompt;
 window.toggleWishConquered = toggleWishConquered;
 window.deleteWish = deleteWish;
 
+// Initialize application when DOM is fully loaded
 window.addEventListener('DOMContentLoaded', () => {
     refreshUI();
 });
