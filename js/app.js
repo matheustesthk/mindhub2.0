@@ -21,6 +21,29 @@ export function renderAll() {
 window.switchTab = switchTab;
 window.resetState = resetState;
 
+
 document.addEventListener('DOMContentLoaded', () => {
     switchTab('dashboard');
+
+    const sidebar = document.getElementById('sidebar');
+    const toggleButton = document.getElementById('sidebar-toggle');
+
+    if (sidebar && toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-collapsed');
+
+            const collapsed = sidebar.classList.contains('sidebar-collapsed');
+
+            toggleButton.setAttribute(
+                'aria-label',
+                collapsed ? 'Expandir menu' : 'Recolher menu'
+            );
+
+            toggleButton.setAttribute(
+                'title',
+                collapsed ? 'Expandir menu' : 'Recolher menu'
+            );
+        });
+    }
 });
+
