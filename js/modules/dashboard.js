@@ -1,179 +1,164 @@
+import { getState } from '../state.js';
+import { escapeHtml } from '../utils.js';
 
-import { state } from '../state.js';
+let dashChartInstance = null;
 
 export function renderDashboard() {
-    const container = document.getElementById('tab-dashboard');
-    if (!container) return;
+    const state = getState();
 
-    // Resumo das tarefas
+    // Task Metrics
     const totalTasks = state.tasks.length;
-    const completed = state.tasks.filter(
-        task => task.status === 'completed'
-    ).length;
+    const doneTasks = state.tasks.filter(t => t.status === 'Done').length;
+    const taskPct = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+    
+    const taskCountEl = document.getElementById('dash-task-count');
+    if (taskCountEl) taskCountEl.textContent = `${doneTasks}/${totalTasks}`;
+    const taskPctEl = document.getElementById('dash-task-pct');
+    if (taskPctEl) taskPctEl.textContent = `${taskPct}%`;
 
-    const pending = totalTasks - completed;
+    // Financial Metrics
+    const inc = state.finances.filter(f => f.type === 'income').reduce((a, b) => a + b.amount, 0);
+    const exp = state.finances.filter(f => f.type === 'expense').reduce((a, b) => a + b.amount, 0);
+    const bal = inc - exp;
+    const balEl = document.getElementById('dash-balance');
+    if (balEl) balEl.textContent = `R$ ${bal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
 
-    // Resumo financeiro
-    const incomes = state.finances
-        .filter(item => item.type === 'income')
-        .reduce((total, item) => total + item.amount, 0);
+    // Habits Metrics
+    const totalHabits = state.habits.length;
+    const todayIdx = (new Date().getDay() + 6) % 7;
+    const doneHabits = state.habits.filter(h => h.completedDays.includes(todayIdx)).length;
+    const habitPct = totalHabits > 0 ? Math.round((doneHabits / totalHabits) * 100) : 0;
+    
+    const habitPctEl = document.getElementById('dash-habit-pct');
+    if (habitPctEl) habitPctEl.textContent = `${habitPct}%`;
+    const habitCountEl = document.getElementById('dash-habit-count');
+    if (habitCountEl) habitCountEl.textContent = `${doneHabits}/${totalHabits}`;
 
-    const expenses = state.finances
-        .filter(item => item.type === 'expense')
-        .reduce((total, item) => total + item.amount, 0);
+    // Wishlist Metrics
+    const totalWish = state.wishlist.length;
+    const conqueredWish = state.wishlist.filter(w => w.conquered).length;
+    const totalWishTarget = state.wishlist.reduce((acc, w) => acc + w.targetAmount, 0);
+    const totalWishSaved = state.wishlist.reduce((acc, w) => acc + w.savedAmount, 0);
+    const wishPct = totalWishTarget > 0 ? Math.min(100, Math.round((totalWishSaved / totalWishTarget) * 100)) : 0;
+    
+    const wishPctEl = document.getElementById('dash-wish-pct');
+    if (wishPctEl) wishPctEl.textContent = `${wishPct}%`;
+    const wishCountEl = document.getElementById('dash-wish-count');
+    if (wishCountEl) wishCountEl.textContent = `${conqueredWish}/${totalWish}`;
+    
+    const badgeEl = document.getElementById('wishlist-badge-count');
+    if (badgeEl) badgeEl.textContent = totalWish - conqueredWish;
 
-    const balance = incomes - expenses;
-
-    // Pomodoros
-    const pomodoros = state.pomodoro.completedSessions;
-
-    // Saudação conforme o horário
-    const hour = new Date().getHours();
-
-    let greeting = 'Boa noite';
-
-    if (hour >= 5 && hour < 12) {
-        greeting = 'Bom dia';
-    } else if (hour >= 12 && hour < 18) {
-        greeting = 'Boa tarde';
+    // Priority Task List
+    const prioTasksContainer = document.getElementById('dash-task-list');
+    if (prioTasksContainer) {
+        prioTasksContainer.innerHTML = '';
+        const priorityTasks = state.tasks.filter(t => t.status !== 'Done').slice(0, 3);
+        
+        if (priorityTasks.length === 0) {
+            prioTasksContainer.innerHTML = '<p class="text-xs text-gray-500 italic py-2">Nenhuma tarefa pendente!</p>';
+        } else {
+            priorityTasks.forEach(t => {
+                const prioColor = t.priority === 'Alta' ? 'text-accent-rose' : (t.priority === 'Média' ? 'text-accent-amber' : 'text-gray-400');
+                prioTasksContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-dark-bg border border-dark-border text-xs">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" onchange="toggleTaskStatus('${t.id}')" class="rounded custom-checkbox w-4 h-4 cursor-pointer">
+                            <span class="font-medium text-white">${escapeHtml(t.title)}</span>
+                        </div>
+                        <span class="font-bold text-[10px] ${prioColor}">${t.priority}</span>
+                    </div>
+                `;
+            });
+        }
     }
 
-    // Data atual
-    const today = new Date();
+    // Quick Habits List
+    const habitsContainer = document.getElementById('dash-habit-list');
+    if (habitsContainer) {
+        habitsContainer.innerHTML = '';
+        state.habits.forEach(h => {
+            const isDone = h.completedDays.includes(todayIdx);
+            habitsContainer.innerHTML += `
+                <button onclick="toggleHabitDay('${h.id}', ${todayIdx})" class="p-3 rounded-xl border text-left flex items-center justify-between transition ${isDone ? 'bg-brand-500/10 border-brand-500/30 text-brand-400' : 'bg-dark-bg border-dark-border text-gray-400 hover:text-white'}">
+                    <div>
+                        <p class="text-xs font-bold text-white">${escapeHtml(h.title)}</p>
+                        <p class="text-[10px] opacity-75">Sequência: ${h.streak} dias 🔥</p>
+                    </div>
+                    <i class="fa-solid ${isDone ? 'fa-circle-check text-brand-400' : 'fa-circle text-gray-600'} text-base"></i>
+                </button>
+            `;
+        });
+    }
 
-    const formattedDate = today.toLocaleDateString('pt-BR', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+    // Dashboard Wishlist Container
+    const wishContainer = document.getElementById('dash-wishlist-container');
+    if (wishContainer) {
+        wishContainer.innerHTML = '';
+        const pendingWishes = state.wishlist
+            .filter(w => !w.conquered)
+            .map(w => ({ ...w, pct: w.targetAmount > 0 ? Math.min(100, Math.round((w.savedAmount / w.targetAmount) * 100)) : 0 }))
+            .sort((a, b) => b.pct - a.pct)
+            .slice(0, 2);
+
+        if (pendingWishes.length === 0) {
+            wishContainer.innerHTML = '<p class="text-xs text-gray-500 italic py-2 col-span-2">Nenhum desejo pendente! Adicione novas metas.</p>';
+        } else {
+            pendingWishes.forEach(w => {
+                wishContainer.innerHTML += `
+                    <div class="p-3 rounded-xl bg-dark-bg border border-dark-border space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-xs text-white truncate max-w-[140px]">${escapeHtml(w.title)}</span>
+                            <span class="text-[10px] font-mono font-bold text-accent-pink">${w.pct}%</span>
+                        </div>
+                        <div class="w-full bg-dark-card rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-gradient-to-r from-accent-pink to-accent-purple h-full rounded-full" style="width: ${w.pct}%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] text-gray-400">
+                            <span>R$ ${w.savedAmount.toLocaleString('pt-BR')} / ${w.targetAmount.toLocaleString('pt-BR')}</span>
+                            <button onclick="quickAddSavingsPrompt('${w.id}')" class="text-accent-pink hover:underline font-bold">+ Economia</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    }
+
+    renderDashChart();
+}
+
+export function renderDashChart() {
+    const ctx = document.getElementById('dash-finance-chart');
+    if (!ctx) return;
+
+    const state = getState();
+    const categories = {};
+    state.finances.filter(f => f.type === 'expense').forEach(f => {
+        categories[f.category] = (categories[f.category] || 0) + f.amount;
     });
 
-    // Formatação de moeda
-    const currency = value =>
-        value.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
-        });
+    const labels = Object.keys(categories);
+    const data = Object.values(categories);
 
-    container.innerHTML = `
-        <!-- Cabeçalho do Dashboard -->
-        <header class="mb-8">
-            <p class="text-sm text-slate-400 capitalize mb-2">
-                ${formattedDate}
-            </p>
+    if (dashChartInstance) dashChartInstance.destroy();
 
-            <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-                ${greeting}! 👋
-            </h2>
-
-            <p class="text-slate-400 mt-2">
-                Aqui está o resumo da sua vida hoje.
-            </p>
-        </header>
-
-        <!-- Cards de resumo -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-
-            <!-- Card de tarefas -->
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <p class="text-sm text-slate-400">
-                            Tarefas concluídas
-                        </p>
-
-                        <h3 class="text-3xl font-bold text-white mt-2">
-                            ${completed}
-                            <span class="text-lg text-slate-500">
-                                / ${totalTasks}
-                            </span>
-                        </h3>
-                    </div>
-
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10
-                                flex items-center justify-center">
-                        <i class="fa-solid fa-list-check
-                                  text-emerald-400 text-xl"></i>
-                    </div>
-                </div>
-
-                <div class="w-full bg-slate-800 rounded-full h-2">
-                    <div
-                        class="bg-emerald-400 h-2 rounded-full transition-all"
-                        style="width: ${
-                            totalTasks > 0
-                                ? (completed / totalTasks) * 100
-                                : 0
-                        }%"
-                    ></div>
-                </div>
-
-                <p class="text-xs text-slate-500 mt-3">
-                    ${pending} tarefa(s) pendente(s)
-                </p>
-            </div>
-
-            <!-- Card financeiro -->
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <p class="text-sm text-slate-400">
-                            Saldo geral
-                        </p>
-
-                        <h3 class="text-2xl sm:text-3xl font-bold mt-2
-                            ${balance >= 0
-                                ? 'text-emerald-400'
-                                : 'text-rose-400'}">
-                            ${currency(balance)}
-                        </h3>
-                    </div>
-
-                    <div class="w-12 h-12 rounded-xl bg-sky-500/10
-                                flex items-center justify-center">
-                        <i class="fa-solid fa-wallet
-                                  text-sky-400 text-xl"></i>
-                    </div>
-                </div>
-
-                <div class="flex justify-between gap-3 text-xs">
-                    <span class="text-emerald-400">
-                        <i class="fa-solid fa-arrow-up mr-1"></i>
-                        ${currency(incomes)}
-                    </span>
-
-                    <span class="text-rose-400">
-                        <i class="fa-solid fa-arrow-down mr-1"></i>
-                        ${currency(expenses)}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Card Pomodoro -->
-            <div class="glass-card p-6 rounded-2xl">
-                <div class="flex items-center justify-between mb-5">
-                    <div>
-                        <p class="text-sm text-slate-400">
-                            Pomodoros concluídos
-                        </p>
-
-                        <h3 class="text-3xl font-bold text-amber-400 mt-2">
-                            ${pomodoros}
-                        </h3>
-                    </div>
-
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10
-                                flex items-center justify-center">
-                        <i class="fa-solid fa-stopwatch
-                                  text-amber-400 text-xl"></i>
-                    </div>
-                </div>
-
-                <p class="text-xs text-slate-500">
-                    Sessões de foco concluídas
-                </p>
-            </div>
-
-        </div>
-    `;
+    dashChartInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels.length ? labels : ['Sem Gastos'],
+            datasets: [{
+                data: data.length ? data : [1],
+                backgroundColor: ['#22c55e', '#06b6d4', '#f59e0b', '#f43f5e', '#a855f7'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#9ca3af', font: { size: 10 } } }
+            },
+            cutout: '70%'
+        }
+    });
 }
