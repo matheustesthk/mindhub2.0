@@ -1,61 +1,211 @@
-.nav-btn { display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.75rem 1rem; border-radius: 0.75rem; color: #94a3b8; font-weight: 500; font-size: 0.875rem; transition: all 0.2s; }
-.nav-btn:hover { background: rgba(30, 41, 59, 0.6); color: #e2e8f0; }
-.nav-btn.active { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); font-weight: 600; }
-.glass-card { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
 
-/* Botão de recolher e expandir a Sidebar */
+/* =========================================
+   MINDHUB - ESTILOS PERSONALIZADOS
+   ========================================= */
+
+/* -----------------------------------------
+   SIDEBAR - BOTÕES DE NAVEGAÇÃO
+   ----------------------------------------- */
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    width: 100%;
+    padding: 0.75rem 1rem;
+
+    border-radius: 0.75rem;
+
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.875rem;
+
+    border: 1px solid transparent;
+    background: transparent;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        border 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: rgba(30, 41, 59, 0.6);
+    color: #e2e8f0;
+}
+
+.nav-btn.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: #34d399;
+
+    border: 1px solid rgba(16, 185, 129, 0.2);
+
+    font-weight: 600;
+}
+
+.nav-btn i {
+    flex-shrink: 0;
+    text-align: center;
+}
+
+
+/* -----------------------------------------
+   CARDS COM EFEITO GLASS
+   ----------------------------------------- */
+
+.glass-card {
+    background: rgba(15, 23, 42, 0.65);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+
+/* -----------------------------------------
+   SIDEBAR
+   ----------------------------------------- */
+
+.sidebar {
+    width: 16rem;
+    min-width: 16rem;
+
+    transition:
+        width 0.25s ease,
+        min-width 0.25s ease;
+}
+
+
+/* -----------------------------------------
+   CABEÇALHO DA SIDEBAR
+   ----------------------------------------- */
+
+.sidebar-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sidebar-brand-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-brand-text {
+    min-width: 0;
+    overflow: hidden;
+
+    transition:
+        opacity 0.2s ease,
+        width 0.2s ease;
+}
+
+
+/* -----------------------------------------
+   BOTÃO RECOLHER / EXPANDIR
+   ----------------------------------------- */
+
 .sidebar-toggle {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    margin: 12px auto;
-    border-radius: 10px;
+
+    width: 2.5rem;
+    height: 2.5rem;
+
+    margin-left: auto;
+
+    border-radius: 0.625rem;
+
     color: #94a3b8;
+
     background: rgba(30, 41, 59, 0.5);
+
     border: 1px solid rgba(148, 163, 184, 0.12);
+
     cursor: pointer;
-    transition: all 0.2s ease;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        transform 0.25s ease;
 }
 
 .sidebar-toggle:hover {
     color: #34d399;
+
     background: rgba(16, 185, 129, 0.1);
 }
 
-/* Sidebar recolhida */
+.sidebar-toggle i {
+    transition: transform 0.25s ease;
+}
+
+
+/* -----------------------------------------
+   SIDEBAR RECOLHIDA
+   ----------------------------------------- */
+
 .sidebar.sidebar-collapsed {
-    width: 80px;
+    width: 5rem;
+    min-width: 5rem;
 }
 
-/* Centralizar os botões da navegação */
-.sidebar.sidebar-collapsed .nav-btn {
+
+/* Cabeçalho quando recolhido */
+
+.sidebar.sidebar-collapsed .sidebar-brand {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    align-items: center;
+}
+
+.sidebar.sidebar-collapsed .sidebar-brand-content {
     justify-content: center;
-    padding: 0.75rem 0;
-    gap: 0;
-    font-size: 0;
 }
 
-/* Manter os ícones visíveis */
-.sidebar.sidebar-collapsed .nav-btn i {
-    font-size: 1rem;
-    width: 1.25rem;
-}
-
-/* Esconder o nome e subtítulo do MindHub */
 .sidebar.sidebar-collapsed .sidebar-brand-text {
     display: none;
 }
 
-/* Centralizar o logotipo */
-.sidebar.sidebar-collapsed .sidebar-brand {
-    justify-content: center;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+
+/* Botão de expandir quando recolhido */
+
+.sidebar.sidebar-collapsed .sidebar-toggle {
+    margin-left: 0;
 }
 
-/* Botão de resetar dados quando recolhido */
+.sidebar.sidebar-collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
+}
+
+
+/* Navegação quando recolhida */
+
+.sidebar.sidebar-collapsed .nav-btn {
+    justify-content: center;
+
+    gap: 0;
+    padding: 0.75rem 0;
+
+    font-size: 0;
+}
+
+.sidebar.sidebar-collapsed .nav-btn i {
+    width: 1.25rem;
+
+    font-size: 1rem;
+}
+
+
+/* Resetar dados quando recolhido */
+
 .sidebar.sidebar-collapsed .sidebar-reset {
     font-size: 0;
     gap: 0;
@@ -65,7 +215,24 @@
     font-size: 0.875rem;
 }
 
-/* Ajustar o botão de recolher */
-.sidebar.sidebar-collapsed .sidebar-toggle i {
-    transform: rotate(180deg);
+
+/* -----------------------------------------
+   ACESSIBILIDADE
+   ----------------------------------------- */
+
+.sidebar-toggle:focus-visible,
+.nav-btn:focus-visible {
+    outline: 2px solid #34d399;
+    outline-offset: 3px;
+}
+
+
+/* -----------------------------------------
+   RESPONSIVIDADE
+   ----------------------------------------- */
+
+@media (max-width: 767px) {
+    .sidebar {
+        display: none;
+    }
 }
