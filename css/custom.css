@@ -234,5 +234,69 @@
 @media (max-width: 767px) {
     .sidebar {
         display: none;
+       /* =========================================
+   AJUSTE DEFINITIVO DA SIDEBAR
+   ========================================= */
+
+/* Sidebar expandida */
+#sidebar {
+    width: 256px;
+    min-width: 256px;
+    flex: 0 0 256px;
+
+    transition:
+        width 0.25s ease,
+        min-width 0.25s ease,
+        flex-basis 0.25s ease;
+}
+
+/* Sidebar recolhida */
+#sidebar.sidebar-collapsed {
+    width: 80px !important;
+    min-width: 80px !important;
+    flex: 0 0 80px !important;
+}
+
+/* Ocultar nomes das abas quando recolhida */
+#sidebar.sidebar-collapsed .nav-label {
+    display: none;
+}
+
+/* Centralizar ícones */
+#sidebar.sidebar-collapsed .nav-btn {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Ocultar nome do MindHub */
+#sidebar.sidebar-collapsed .sidebar-brand-text {
+    display: none;
+}
+
+/* Centralizar logo */
+#sidebar.sidebar-collapsed .sidebar-brand-content {
+    justify-content: center;
+}
+
+/* Ajustar botão de recolher */
+#sidebar.sidebar-collapsed .sidebar-toggle {
+    margin-left: 0;
+}
+
+/* Girar seta */
+#sidebar.sidebar-collapsed .sidebar-toggle i {
+    transform: rotate(180deg);
+}
+
+/* Ocultar texto do botão resetar */
+#sidebar.sidebar-collapsed .sidebar-reset {
+    font-size: 0;
+    gap: 0;
+}
+
+#sidebar.sidebar-collapsed .sidebar-reset i {
+    font-size: 14px;
+}
     }
 }
