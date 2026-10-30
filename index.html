@@ -1,73 +1,236 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>MindHub - Gestão Pessoal</title>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: { extend: { colors: { slate: { 950: '#090d16' } } } }
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#090d16'
+                        }
+                    }
+                }
+            }
         };
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CSS personalizado -->
     <link rel="stylesheet" href="./css/custom.css">
 </head>
+
 <body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
 
-    <aside id="sidebar" class="sidebar w-64 bg-slate-900/90 border-r border-slate-800 flex-col justify-between hidden md:flex shrink-0 min-h-screen sticky top-0 z-30">
+    <!-- SIDEBAR -->
+    <aside
+        id="sidebar"
+        class="sidebar w-64 bg-slate-900/90 border-r border-slate-800 flex-col justify-between hidden md:flex shrink-0 min-h-screen sticky top-0 z-30"
+    >
+
+        <!-- Parte superior -->
         <div>
-            <div class="sidebar-brand p-6 flex items-center gap-3 border-b border-slate-800">
+
+            <!-- Cabeçalho da Sidebar -->
+            <div class="sidebar-brand p-6 border-b border-slate-800">
+
+                <!-- Logo e nome -->
+                <div class="sidebar-brand-content flex items-center gap-3">
+
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+                        <i class="fa-solid fa-brain text-slate-950 text-xl"></i>
+                    </div>
+
+                    <div class="sidebar-brand-text">
+                        <h1 class="font-bold text-lg tracking-tight text-white">
+                            MindHub
+                        </h1>
+
+                        <span class="text-[10px] uppercase font-semibold text-emerald-400 tracking-wider">
+                            Gestão Pessoal
+                        </span>
+                    </div>
+
+                </div>
+
+                <!-- Botão recolher / expandir -->
                 <button
-    id="sidebar-toggle"
-    type="button"
-    class="sidebar-toggle"
-    aria-label="Recolher menu"
-    title="Recolher menu"
->
-    <i class="fa-solid fa-angles-left"></i>
-</button>
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-                    <i class="fa-solid fa-brain text-slate-950 text-xl"></i>
-                </div>
-            
-                  <div class="sidebar-brand-text">
-    <h1 class="font-bold text-lg tracking-tight text-white">MindHub</h1>
-    <span class="text-[10px] uppercase font-semibold text-emerald-400 tracking-wider">
-        Gestão Pessoal
-    </span>
-</div>
-                </div>
+                    id="sidebar-toggle"
+                    type="button"
+                    class="sidebar-toggle"
+                    aria-label="Recolher menu"
+                    title="Recolher menu"
+                >
+                    <i class="fa-solid fa-angles-left"></i>
+                </button>
+
+            </div>
+
+            <!-- Navegação -->
             <nav class="p-4 space-y-1">
-                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active"><i class="fa-solid fa-chart-pie w-5"></i> Dashboard</button>
-                <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-btn"><i class="fa-solid fa-list-check w-5"></i> Tarefas & Kanban</button>
-                <button onclick="switchTab('finances')" id="nav-finances" class="nav-btn"><i class="fa-solid fa-wallet w-5"></i> Financeiro</button>
-                <button onclick="switchTab('habits')" id="nav-habits" class="nav-btn"><i class="fa-solid fa-fire w-5"></i> Hábitos</button>
-                <button onclick="switchTab('notes')" id="nav-notes" class="nav-btn"><i class="fa-solid fa-sticky-note w-5"></i> Notas & Ideias</button>
-                <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="nav-btn"><i class="fa-solid fa-stopwatch w-5"></i> Timer Pomodoro</button>
-                <button onclick="switchTab('wishlist')" id="nav-wishlist" class="nav-btn"><i class="fa-solid fa-wand-magic-sparkles w-5"></i> Lista de Desejos</button>
+
+                <button
+                    onclick="switchTab('dashboard')"
+                    id="nav-dashboard"
+                    class="nav-btn active"
+                    title="Dashboard"
+                >
+                    <i class="fa-solid fa-chart-pie w-5"></i>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+
+                <button
+                    onclick="switchTab('tasks')"
+                    id="nav-tasks"
+                    class="nav-btn"
+                    title="Tarefas & Kanban"
+                >
+                    <i class="fa-solid fa-list-check w-5"></i>
+                    <span class="nav-label">Tarefas & Kanban</span>
+                </button>
+
+                <button
+                    onclick="switchTab('finances')"
+                    id="nav-finances"
+                    class="nav-btn"
+                    title="Financeiro"
+                >
+                    <i class="fa-solid fa-wallet w-5"></i>
+                    <span class="nav-label">Financeiro</span>
+                </button>
+
+                <button
+                    onclick="switchTab('habits')"
+                    id="nav-habits"
+                    class="nav-btn"
+                    title="Hábitos"
+                >
+                    <i class="fa-solid fa-fire w-5"></i>
+                    <span class="nav-label">Hábitos</span>
+                </button>
+
+                <button
+                    onclick="switchTab('notes')"
+                    id="nav-notes"
+                    class="nav-btn"
+                    title="Notas & Ideias"
+                >
+                    <i class="fa-solid fa-sticky-note w-5"></i>
+                    <span class="nav-label">Notas & Ideias</span>
+                </button>
+
+                <button
+                    onclick="switchTab('pomodoro')"
+                    id="nav-pomodoro"
+                    class="nav-btn"
+                    title="Timer Pomodoro"
+                >
+                    <i class="fa-solid fa-stopwatch w-5"></i>
+                    <span class="nav-label">Timer Pomodoro</span>
+                </button>
+
+                <button
+                    onclick="switchTab('wishlist')"
+                    id="nav-wishlist"
+                    class="nav-btn"
+                    title="Lista de Desejos"
+                >
+                    <i class="fa-solid fa-wand-magic-sparkles w-5"></i>
+                    <span class="nav-label">Lista de Desejos</span>
+                </button>
+
             </nav>
+
         </div>
+
+        <!-- Parte inferior -->
         <div class="p-4 border-t border-slate-800">
-            <button onclick="resetState()" class="sidebar-reset w-full text-xs text-slate-400 hover:text-rose-400 flex items-center justify-center gap-2 py-2 rounded border border-slate-800">
-                <i class="fa-solid fa-rotate-left"></i> Resetar Dados
+
+            <button
+                onclick="resetState()"
+                class="sidebar-reset w-full text-xs text-slate-400 hover:text-rose-400 flex items-center justify-center gap-2 py-2 rounded border border-slate-800"
+                title="Resetar Dados"
+            >
+                <i class="fa-solid fa-rotate-left"></i>
+                <span class="nav-label">Resetar Dados</span>
             </button>
+
         </div>
+
     </aside>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <main class="flex-1 flex flex-col min-w-0 p-6 max-w-7xl mx-auto space-y-6">
-        <section id="tab-dashboard" class="tab-panel"></section>
-        <section id="tab-tasks" class="tab-panel hidden"></section>
-        <section id="tab-finances" class="tab-panel hidden"></section>
-        <section id="tab-habits" class="tab-panel hidden"></section>
-        <section id="tab-notes" class="tab-panel hidden"></section>
-        <section id="tab-pomodoro" class="tab-panel hidden"></section>
-        <section id="tab-wishlist" class="tab-panel hidden"></section>
+
+        <!-- Dashboard -->
+        <section
+            id="tab-dashboard"
+            class="tab-panel"
+        ></section>
+
+        <!-- Tarefas -->
+        <section
+            id="tab-tasks"
+            class="tab-panel hidden"
+        ></section>
+
+        <!-- Financeiro -->
+        <section
+            id="tab-finances"
+            class="tab-panel hidden"
+        ></section>
+
+        <!-- Hábitos -->
+        <section
+            id="tab-habits"
+            class="tab-panel hidden"
+        ></section>
+
+        <!-- Notas -->
+        <section
+            id="tab-notes"
+            class="tab-panel hidden"
+        ></section>
+
+        <!-- Pomodoro -->
+        <section
+            id="tab-pomodoro"
+            class="tab-panel hidden"
+        ></section>
+
+        <!-- Lista de desejos -->
+        <section
+            id="tab-wishlist"
+            class="tab-panel hidden"
+        ></section>
+
     </main>
 
+    <!-- JavaScript principal -->
     <script type="module" src="./js/app.js"></script>
+
 </body>
+
 </html>
