@@ -1,35 +1,33 @@
+/* =========================================
+   ESTILOS GERAIS
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
 
 /* =========================================
-   MINDHUB - ESTILOS PERSONALIZADOS
-   ========================================= */
-
-/* -----------------------------------------
-   SIDEBAR - BOTÕES DE NAVEGAÇÃO
-   ----------------------------------------- */
+   BOTÕES DA NAVEGAÇÃO
+========================================= */
 
 .nav-btn {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-
     width: 100%;
     padding: 0.75rem 1rem;
-
     border-radius: 0.75rem;
-
     color: #94a3b8;
     font-weight: 500;
     font-size: 0.875rem;
-
+    transition: all 0.2s ease;
     border: 1px solid transparent;
     background: transparent;
-
     cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        color 0.2s ease,
-        border 0.2s ease;
 }
 
 .nav-btn:hover {
@@ -40,209 +38,40 @@
 .nav-btn.active {
     background: rgba(16, 185, 129, 0.1);
     color: #34d399;
-
     border: 1px solid rgba(16, 185, 129, 0.2);
-
     font-weight: 600;
 }
 
 .nav-btn i {
-    flex-shrink: 0;
+    width: 20px;
+    min-width: 20px;
     text-align: center;
-}
-
-
-/* -----------------------------------------
-   CARDS COM EFEITO GLASS
-   ----------------------------------------- */
-
-.glass-card {
-    background: rgba(15, 23, 42, 0.65);
-
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-
-/* -----------------------------------------
-   SIDEBAR
-   ----------------------------------------- */
-
-.sidebar {
-    width: 16rem;
-    min-width: 16rem;
-
-    transition:
-        width 0.25s ease,
-        min-width 0.25s ease;
-}
-
-
-/* -----------------------------------------
-   CABEÇALHO DA SIDEBAR
-   ----------------------------------------- */
-
-.sidebar-brand {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
-
-.sidebar-brand-content {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.sidebar-brand-text {
-    min-width: 0;
-    overflow: hidden;
-
-    transition:
-        opacity 0.2s ease,
-        width 0.2s ease;
-}
-
-
-/* -----------------------------------------
-   BOTÃO RECOLHER / EXPANDIR
-   ----------------------------------------- */
-
-.sidebar-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 2.5rem;
-    height: 2.5rem;
-
-    margin-left: auto;
-
-    border-radius: 0.625rem;
-
-    color: #94a3b8;
-
-    background: rgba(30, 41, 59, 0.5);
-
-    border: 1px solid rgba(148, 163, 184, 0.12);
-
-    cursor: pointer;
-
-    transition:
-        color 0.2s ease,
-        background 0.2s ease,
-        transform 0.25s ease;
-}
-
-.sidebar-toggle:hover {
-    color: #34d399;
-
-    background: rgba(16, 185, 129, 0.1);
-}
-
-.sidebar-toggle i {
-    transition: transform 0.25s ease;
-}
-
-
-/* -----------------------------------------
-   SIDEBAR RECOLHIDA
-   ----------------------------------------- */
-
-.sidebar.sidebar-collapsed {
-    width: 5rem;
-    min-width: 5rem;
-}
-
-
-/* Cabeçalho quando recolhido */
-
-.sidebar.sidebar-collapsed .sidebar-brand {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-
-    align-items: center;
-}
-
-.sidebar.sidebar-collapsed .sidebar-brand-content {
-    justify-content: center;
-}
-
-.sidebar.sidebar-collapsed .sidebar-brand-text {
-    display: none;
-}
-
-
-/* Botão de expandir quando recolhido */
-
-.sidebar.sidebar-collapsed .sidebar-toggle {
-    margin-left: 0;
-}
-
-.sidebar.sidebar-collapsed .sidebar-toggle i {
-    transform: rotate(180deg);
-}
-
-
-/* Navegação quando recolhida */
-
-.sidebar.sidebar-collapsed .nav-btn {
-    justify-content: center;
-
-    gap: 0;
-    padding: 0.75rem 0;
-
-    font-size: 0;
-}
-
-.sidebar.sidebar-collapsed .nav-btn i {
-    width: 1.25rem;
-
     font-size: 1rem;
 }
 
+/* =========================================
+   CARDS
+========================================= */
 
-/* Resetar dados quando recolhido */
-
-.sidebar.sidebar-collapsed .sidebar-reset {
-    font-size: 0;
-    gap: 0;
+.glass-card {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.sidebar.sidebar-collapsed .sidebar-reset i {
-    font-size: 0.875rem;
-}
+/* =========================================
+   BARRA LATERAL - SIDEBAR
+========================================= */
 
-
-/* -----------------------------------------
-   ACESSIBILIDADE
-   ----------------------------------------- */
-
-.sidebar-toggle:focus-visible,
-.nav-btn:focus-visible {
-    outline: 2px solid #34d399;
-    outline-offset: 3px;
-}
-
-
-/* -----------------------------------------
-   RESPONSIVIDADE
-   ----------------------------------------- */
-
-@media (max-width: 767px) {
-    .sidebar {
-        display: none;
-       /* =========================================
-   AJUSTE DEFINITIVO DA SIDEBAR
-   ========================================= */
-
-/* Sidebar expandida */
 #sidebar {
     width: 256px;
     min-width: 256px;
     flex: 0 0 256px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
 
     transition:
         width 0.25s ease,
@@ -250,53 +79,137 @@
         flex-basis 0.25s ease;
 }
 
-/* Sidebar recolhida */
+/* =========================================
+   CABEÇALHO DA SIDEBAR
+========================================= */
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-height: 64px;
+}
+
+.sidebar-brand-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.sidebar-brand-text {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* =========================================
+   BOTÃO RECOLHER / EXPANDIR
+========================================= */
+
+.sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+
+    border-radius: 0.75rem;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+
+    background: rgba(30, 41, 59, 0.7);
+    color: #cbd5e1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.25s ease;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(51, 65, 85, 0.9);
+    color: #ffffff;
+}
+
+.sidebar-toggle i {
+    transition: transform 0.25s ease;
+}
+
+/* =========================================
+   SIDEBAR RECOLHIDA
+========================================= */
+
 #sidebar.sidebar-collapsed {
     width: 80px !important;
     min-width: 80px !important;
     flex: 0 0 80px !important;
 }
 
-/* Ocultar nomes das abas quando recolhida */
+/* Oculta os textos */
+
+#sidebar.sidebar-collapsed .sidebar-brand-text,
 #sidebar.sidebar-collapsed .nav-label {
-    display: none;
+    display: none !important;
 }
 
-/* Centralizar ícones */
+/* Centraliza os ícones */
+
 #sidebar.sidebar-collapsed .nav-btn {
     justify-content: center;
+    gap: 0;
     padding-left: 0;
     padding-right: 0;
 }
 
-/* Ocultar nome do MindHub */
-#sidebar.sidebar-collapsed .sidebar-brand-text {
-    display: none;
-}
+/* Centraliza a logo */
 
-/* Centralizar logo */
 #sidebar.sidebar-collapsed .sidebar-brand-content {
     justify-content: center;
 }
 
-/* Ajustar botão de recolher */
+/* Ajusta botão de recolher */
+
 #sidebar.sidebar-collapsed .sidebar-toggle {
     margin-left: 0;
 }
 
-/* Girar seta */
+/* Gira o ícone do botão */
+
 #sidebar.sidebar-collapsed .sidebar-toggle i {
     transform: rotate(180deg);
 }
 
-/* Ocultar texto do botão resetar */
+/* Oculta texto do botão de reset */
+
 #sidebar.sidebar-collapsed .sidebar-reset {
-    font-size: 0;
-    gap: 0;
+    font-size: 0 !important;
+    gap: 0 !important;
 }
 
 #sidebar.sidebar-collapsed .sidebar-reset i {
     font-size: 14px;
 }
+
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
+.sidebar-toggle:focus-visible,
+.nav-btn:focus-visible {
+    outline: 2px solid #34d399;
+    outline-offset: 3px;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 767px) {
+    #sidebar {
+        display: none !important;
     }
 }
