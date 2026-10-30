@@ -129,7 +129,7 @@ export function renderDashboard() {
 
 export function renderDashChart() {
     const ctx = document.getElementById('dash-finance-chart');
-    if (!ctx) return;
+    if (!ctx || typeof Chart === 'undefined') return;
 
     const state = getState();
     const categories = {};
