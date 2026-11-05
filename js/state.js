@@ -1,7 +1,7 @@
 import { STORAGE_KEY, defaultState } from './config.js';
 
 let state = loadState();
-let activeWishSavingsId = null;
+export let activeWishSavingsId = null;
 
 export function loadState() {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -34,4 +34,12 @@ export function resetState() {
         state = JSON.parse(JSON.stringify(defaultState));
         saveState();
     }
+}
+
+export function getActiveWishSavingsId() {
+    return activeWishSavingsId;
+}
+
+export function setActiveWishSavingsId(id) {
+    activeWishSavingsId = id;
 }
