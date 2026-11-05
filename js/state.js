@@ -1,9 +1,9 @@
-// js/state.js
+import { STORAGE_KEY, defaultState } from './config.js';
 
 let state = loadState();
 let activeWishSavingsId = null;
 
-function loadState() {
+export function loadState() {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
         try {
@@ -17,18 +17,18 @@ function loadState() {
     return JSON.parse(JSON.stringify(defaultState));
 }
 
-function getState() {
+export function getState() {
     return state;
 }
 
-function saveState() {
+export function saveState() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     if (typeof window.refreshUI === 'function') {
         window.refreshUI();
     }
 }
 
-function resetState() {
+export function resetState() {
     if (confirm("Tem certeza que deseja resetar todos os dados para o padrão?")) {
         localStorage.removeItem(STORAGE_KEY);
         state = JSON.parse(JSON.stringify(defaultState));
