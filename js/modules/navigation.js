@@ -32,7 +32,7 @@ function switchTab(tab) {
 
     const titleMap = {
         dashboard: ['fa-chart-pie text-brand-400', 'Dashboard'],
-        tasks: ['fa-list-check text-brand-400', 'Tarefas & Kanban'],
+        tasks: ['fa-list-check text-brand-400', 'Tarefas'],
         finances: ['fa-wallet text-accent-cyan', 'Gestão Financeira'],
         habits: ['fa-fire text-accent-amber', 'Rastreador de Hábitos'],
         notes: ['fa-note-sticky text-brand-400', 'Notas & Ideias'],

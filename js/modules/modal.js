@@ -1,8 +1,10 @@
 // js/modules/modal.js
 let currentModalType = null;
+let currentEditingTaskId = null;
 
-function openModal(type) {
+function openModal(type, taskId = null) {
     currentModalType = type;
+    currentEditingTaskId = type === 'edit-task' ? String(taskId || '') : null;
     const modal = document.getElementById('app-modal');
     const title = document.getElementById('modal-title');
     const body = document.getElementById('modal-body');
@@ -31,6 +33,22 @@ function openModal(type) {
                     <input type="text" name="category" value="Geral" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1">
                 </div>
             </div>
+            <div>
+                <label class="text-xs text-gray-400 font-semibold">Data de vencimento (opcional)</label>
+                <input type="date" name="dueDate" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1">
+            </div>
+        `;
+    } else if (type === 'edit-task') {
+        const task = state.tasks.find(item => item.id === currentEditingTaskId);
+        if (!task) { closeModal(); return; }
+        title.textContent = 'Editar Tarefa';
+        body.innerHTML = `
+            <div><label class="text-xs text-gray-400 font-semibold">Título</label><input type="text" name="title" required maxlength="160" value="${escapeHtml(task.title)}" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"></div>
+            <div class="grid grid-cols-2 gap-2">
+                <div><label class="text-xs text-gray-400 font-semibold">Prioridade</label><select name="priority" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"><option value="Alta" ${task.priority === 'Alta' ? 'selected' : ''}>Alta</option><option value="Média" ${task.priority === 'Média' ? 'selected' : ''}>Média</option><option value="Baixa" ${task.priority === 'Baixa' ? 'selected' : ''}>Baixa</option></select></div>
+                <div><label class="text-xs text-gray-400 font-semibold">Categoria</label><input type="text" name="category" maxlength="60" value="${escapeHtml(task.category || 'Geral')}" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"></div>
+            </div>
+            <div><label class="text-xs text-gray-400 font-semibold">Data de vencimento (opcional)</label><input type="date" name="dueDate" value="${/^\d{4}-\d{2}-\d{2}$/.test(task.dueDate || '') ? task.dueDate : ''}" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"></div>
         `;
     } else if (type === 'finance') {
         title.textContent = 'Nova Transação';
@@ -149,6 +167,7 @@ function openModal(type) {
 
 function closeModal() {
     document.getElementById('app-modal').classList.add('hidden');
+    currentEditingTaskId = null;
 }
 
 function handleModalSubmit(e) {
@@ -161,9 +180,17 @@ function handleModalSubmit(e) {
             title: formData.get('title'),
             priority: formData.get('priority'),
             status: 'To Do',
-            category: formData.get('category') || 'Geral',
-            dueDate: new Date().toISOString().split('T')[0]
+            category: String(formData.get('category') || 'Geral').trim().slice(0, 60) || 'Geral',
+            dueDate: formData.get('dueDate') || ''
         });
+    } else if (currentModalType === 'edit-task') {
+        const task = state.tasks.find(item => item.id === currentEditingTaskId);
+        const taskTitle = String(formData.get('title') || '').trim();
+        if (!task || !taskTitle) return alert('Informe um título para a tarefa.');
+        task.title = taskTitle.slice(0, 160);
+        task.priority = formData.get('priority') || 'Média';
+        task.category = String(formData.get('category') || 'Geral').trim().slice(0, 60) || 'Geral';
+        task.dueDate = formData.get('dueDate') || '';
     } else if (currentModalType === 'finance') {
         state.finances.push({
             id: Date.now().toString(),

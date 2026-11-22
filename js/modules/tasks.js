@@ -17,6 +17,13 @@ function setTaskView(view) {
     renderTasks();
 }
 
+function formatTaskDueDate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return '';
+    const [year, month, day] = value.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return '';
+    return date.toLocaleDateString('pt-BR');
+}
 function renderTasks() {
     const search = document.getElementById('task-search').value.toLowerCase();
     const prioFilter = document.getElementById('task-filter-priority').value;
@@ -66,7 +73,7 @@ function renderTasks() {
                         <input type="checkbox" ${t.status === 'Done' ? 'checked' : ''} onchange="toggleTaskStatus('${t.id}')" class="rounded custom-checkbox w-4 h-4 cursor-pointer">
                         <div>
                             <p class="font-bold text-white ${t.status === 'Done' ? 'line-through text-gray-500' : ''}">${escapeHtml(t.title)}</p>
-                            <p class="text-[10px] text-gray-400">${escapeHtml(t.category)} • Vencimento: ${escapeHtml(t.dueDate)}</p>
+                            <p class="text-[10px] text-gray-400">${escapeHtml(t.category)}${formatTaskDueDate(t.dueDate) ? ' • Vencimento: ' + formatTaskDueDate(t.dueDate) : ''}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -92,6 +99,7 @@ function createTaskCard(t) {
             <button onclick="editTask('${t.id}')" class="text-gray-400 hover:text-brand-400 text-xs" title="Editar tarefa"><i class="fa-solid fa-pen"></i></button>
             <button onclick="deleteTask('${t.id}')" class="text-gray-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-trash"></i></button>
         </div>
+        ${formatTaskDueDate(t.dueDate) ? '<p class="text-[10px] text-gray-400"><i class="fa-regular fa-calendar mr-1"></i>Vencimento: ' + formatTaskDueDate(t.dueDate) + '</p>' : ''}
         <div class="flex items-center justify-between pt-1">
             <span class="text-[10px] px-2 py-0.5 rounded border ${prioBadge} font-bold">${t.priority}</span>
             <select onchange="updateTaskStatus('${t.id}', this.value)" class="bg-dark-bg text-[10px] text-gray-300 border border-dark-border rounded px-1.5 py-0.5 focus:outline-none">
@@ -126,8 +134,6 @@ function deleteTask(id) {
 }
 
 function editTask(id) {
- const task=state.tasks.find(item=>item.id===id); if(!task)return;
- const title=prompt('Título da tarefa:',task.title); if(title===null)return; if(!title.trim())return alert('O título não pode ficar vazio.');
- const category=prompt('Categoria:',task.category||'Geral'); if(category===null)return;
- task.title=title.trim().slice(0,160); task.category=category.trim().slice(0,60)||'Geral'; saveState();
+    if (!state.tasks.some(task => task.id === id)) return;
+    openModal('edit-task', id);
 }

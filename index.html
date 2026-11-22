@@ -54,7 +54,7 @@
 
                 <button onclick="switchTab('tasks')" id="nav-tasks" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-dark-hover transition text-left">
                     <i class="fa-solid fa-list-check w-5 text-center"></i>
-                    <span>Tarefas & Kanban</span>
+                    <span>Tarefas</span>
                 </button>
 
                 <button onclick="switchTab('finances')" id="nav-finances" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold text-gray-400 hover:text-white hover:bg-dark-hover transition text-left">
@@ -118,6 +118,10 @@
             </div>
 
             <div class="flex items-center gap-2.5">
+                <button id="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema" aria-pressed="false" class="border border-dark-border text-gray-300 hover:text-white px-3 py-2 rounded-lg text-xs transition flex items-center gap-2">
+                    <i id="theme-toggle-icon" class="fa-solid fa-sun"></i>
+                    <span id="theme-toggle-label">Modo Claro</span>
+                </button>
                 <button onclick="openModal('quick-add')" class="bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs px-3.5 py-2 rounded-lg transition flex items-center gap-1.5 shadow-lg shadow-brand-600/20">
                     <i class="fa-solid fa-plus"></i>
                     <span class="hidden sm:inline">Criar Novo</span>
@@ -576,5 +580,6 @@
     <script src="js/modules/wishlist.js"></script>
     <script src="js/modules/modal.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/theme.js"></script>
 </body>
 </html>
