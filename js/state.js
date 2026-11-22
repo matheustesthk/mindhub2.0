@@ -83,7 +83,8 @@ function loadState() {
         });
         migrated.pomodoro = {
             ...cloneDefaults().pomodoro,
-            ...(parsed.pomodoro && typeof parsed.pomodoro === 'object' ? parsed.pomodoro : {})
+            ...(parsed.pomodoro && typeof parsed.pomodoro === 'object' ? parsed.pomodoro : {}),
+            endAt: Number.isFinite(Number(parsed.pomodoro?.endAt)) ? Number(parsed.pomodoro.endAt) : null
         };
 
         migrated.tasks = migrated.tasks.map((item) => ({
