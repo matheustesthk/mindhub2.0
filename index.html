@@ -563,15 +563,9 @@
         </div>
     </div>
 
-    <!-- Application JavaScript Modular Scripts -->
+    <!-- MindHub 2.1: carregamento único e ordenado dos scripts -->
     <script src="js/state.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/app.js"></script>
-    <!-- Scripts Principais e Globais -->
-    <script src="js/state.js"></script>
-    <script src="js/utils.js"></script>
-
-    <!-- Módulos de Funcionalidade -->
     <script src="js/modules/navigation.js"></script>
     <script src="js/modules/dashboard.js"></script>
     <script src="js/modules/tasks.js"></script>
@@ -581,19 +575,6 @@
     <script src="js/modules/pomodoro.js"></script>
     <script src="js/modules/wishlist.js"></script>
     <script src="js/modules/modal.js"></script>
-
-    <!-- Script de Inicialização da Aplicação -->
     <script src="js/app.js"></script>
 </body>
 </html>
-<script>
-    const STORAGE_KEY = 'mindhub_gui_data_v2';
-
-    // Definição da estrutura de dados inicial
-    const defaultState = {
-        // Cole o seu objeto de dados aqui
-    };
-
-    let state = loadState();
-    // ... resto das funções do JavaScript
-</script>

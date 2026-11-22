@@ -8,8 +8,10 @@ function renderDashboard() {
     document.getElementById('dash-task-count').textContent = `${doneTasks}/${totalTasks}`;
     document.getElementById('dash-task-pct').textContent = `${taskPct}%`;
 
-    const inc = state.finances.filter(f => f.type === 'income').reduce((a, b) => a + b.amount, 0);
-    const exp = state.finances.filter(f => f.type === 'expense').reduce((a, b) => a + b.amount, 0);
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const monthFinances = state.finances.filter(f => String(f.date || '').slice(0, 7) === currentMonth);
+    const inc = monthFinances.filter(f => f.type === 'income').reduce((a, b) => a + Number(b.amount || 0), 0);
+    const exp = monthFinances.filter(f => f.type === 'expense').reduce((a, b) => a + Number(b.amount || 0), 0);
     const bal = inc - exp;
     document.getElementById('dash-balance').textContent = `R$ ${bal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
 
@@ -106,7 +108,8 @@ function renderDashChart() {
     if (!ctx) return;
 
     const categories = {};
-    state.finances.filter(f => f.type === 'expense').forEach(f => {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    state.finances.filter(f => f.type === 'expense' && String(f.date || '').slice(0, 7) === currentMonth).forEach(f => {
         categories[f.category] = (categories[f.category] || 0) + f.amount;
     });
 

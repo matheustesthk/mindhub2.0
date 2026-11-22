@@ -1,65 +1,11 @@
 // js/modules/pomodoro.js
 let pomodoroTimer = null;
-
-function setPomoMode(mode) {
-    state.pomodoro.mode = mode;
-    if (pomodoroTimer) clearInterval(pomodoroTimer);
-    state.pomodoro.isRunning = false;
-
-    if (mode === 'focus') state.pomodoro.timeLeft = 25 * 60;
-    else if (mode === 'shortBreak') state.pomodoro.timeLeft = 5 * 60;
-    else if (mode === 'longBreak') state.pomodoro.timeLeft = 15 * 60;
-
-    updatePomoUI();
-}
-
-function togglePomodoro() {
-    if (state.pomodoro.isRunning) {
-        clearInterval(pomodoroTimer);
-        state.pomodoro.isRunning = false;
-    } else {
-        state.pomodoro.isRunning = true;
-        pomodoroTimer = setInterval(() => {
-            if (state.pomodoro.timeLeft > 0) {
-                state.pomodoro.timeLeft--;
-                updatePomoUI();
-            } else {
-                clearInterval(pomodoroTimer);
-                state.pomodoro.isRunning = false;
-                playChime();
-                if (state.pomodoro.mode === 'focus') {
-                    state.pomodoro.focusMinutesToday += 25;
-                    state.pomodoro.sessionsToday += 1;
-                }
-                saveState();
-                alert("Sessão Pomodoro Concluída! 🎉");
-            }
-        }, 1000);
-    }
-    updatePomoUI();
-}
-
-function resetPomodoro() {
-    setPomoMode(state.pomodoro.mode);
-}
-
-function updatePomoUI() {
-    const min = Math.floor(state.pomodoro.timeLeft / 60);
-    const sec = state.pomodoro.timeLeft % 60;
-    const timeStr = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
-
-    document.getElementById('pomo-timer-text').textContent = timeStr;
-    document.getElementById('dash-pomo-display').textContent = timeStr;
-
-    const btnText = state.pomodoro.isRunning ? 'Pausar' : 'Iniciar Foco';
-    document.getElementById('pomo-main-btn').textContent = btnText;
-    document.getElementById('dash-pomo-btn').textContent = btnText;
-
-    const total = state.pomodoro.mode === 'focus' ? 25 * 60 : (state.pomodoro.mode === 'shortBreak' ? 5 * 60 : 15 * 60);
-    const offset = 691 - (state.pomodoro.timeLeft / total) * 691;
-    const ring = document.getElementById('pomo-progress-ring');
-    if (ring) ring.style.strokeDashoffset = offset;
-
-    document.getElementById('pomo-sessions-count').textContent = state.pomodoro.sessionsToday;
-    document.getElementById('pomo-total-time').textContent = `${state.pomodoro.focusMinutesToday} min`;
-}
+function pomoDuration(mode) { return mode === 'shortBreak' ? 300 : mode === 'longBreak' ? 900 : 1500; }
+function stopPomodoroInterval() { if (pomodoroTimer) clearInterval(pomodoroTimer); pomodoroTimer = null; }
+function tickPomodoro() { if (!state.pomodoro.isRunning || !state.pomodoro.endAt) return; const remaining=state.pomodoro.endAt-Date.now(); state.pomodoro.timeLeft=Math.max(0,Math.ceil(remaining/1000)); updatePomoUI(); if(remaining<=0)finishPomodoro(); }
+function finishPomodoro() { stopPomodoroInterval(); if(!state.pomodoro.isRunning)return; state.pomodoro.timeLeft=0; state.pomodoro.isRunning=false; state.pomodoro.endAt=null; if(state.pomodoro.mode==='focus'){state.pomodoro.focusMinutesToday=(Number(state.pomodoro.focusMinutesToday)||0)+25;state.pomodoro.sessionsToday=(Number(state.pomodoro.sessionsToday)||0)+1;} saveState(); playChime(); alert('Sessão Pomodoro Concluída! 🎉'); }
+function setPomoMode(mode) { if(!['focus','shortBreak','longBreak'].includes(mode))return; stopPomodoroInterval(); state.pomodoro.mode=mode; state.pomodoro.isRunning=false; state.pomodoro.endAt=null; state.pomodoro.timeLeft=pomoDuration(mode); saveState(); }
+function togglePomodoro() { if(state.pomodoro.isRunning){tickPomodoro();stopPomodoroInterval();state.pomodoro.isRunning=false;state.pomodoro.endAt=null;saveState();return;} if(state.pomodoro.timeLeft<=0)state.pomodoro.timeLeft=pomoDuration(state.pomodoro.mode); state.pomodoro.endAt=Date.now()+state.pomodoro.timeLeft*1000; state.pomodoro.isRunning=true; tickPomodoro(); if(state.pomodoro.isRunning)pomodoroTimer=setInterval(tickPomodoro,250); saveState(); }
+function resetPomodoro() { setPomoMode(state.pomodoro.mode); }
+function updatePomoUI() { const pomo=state.pomodoro;if(!pomo)return;const timeStr=String(Math.floor(pomo.timeLeft/60)).padStart(2,'0')+':'+String(pomo.timeLeft%60).padStart(2,'0');const timerText=document.getElementById('pomo-timer-text');const dashDisplay=document.getElementById('dash-pomo-display');const mainBtn=document.getElementById('pomo-main-btn');const dashBtn=document.getElementById('dash-pomo-btn');if(timerText)timerText.textContent=timeStr;if(dashDisplay)dashDisplay.textContent=timeStr;const buttonText=pomo.isRunning?'Pausar':'Iniciar Foco';if(mainBtn)mainBtn.textContent=buttonText;if(dashBtn)dashBtn.textContent=buttonText;const ring=document.getElementById('pomo-progress-ring');if(ring)ring.style.strokeDashoffset=691-(pomo.timeLeft/pomoDuration(pomo.mode))*691;const sessions=document.getElementById('pomo-sessions-count');const totalTime=document.getElementById('pomo-total-time');if(sessions)sessions.textContent=Number(pomo.sessionsToday)||0;if(totalTime)totalTime.textContent=(Number(pomo.focusMinutesToday)||0)+' min'; }
+window.addEventListener('DOMContentLoaded',()=>{if(state.pomodoro.isRunning&&state.pomodoro.endAt){tickPomodoro();if(state.pomodoro.isRunning)pomodoroTimer=setInterval(tickPomodoro,250);}else if(state.pomodoro.isRunning){state.pomodoro.isRunning=false;state.pomodoro.endAt=null;saveState();}});

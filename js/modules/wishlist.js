@@ -64,12 +64,13 @@ function renderWishlist() {
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 bg-dark-bg px-2.5 py-1 rounded-md border border-dark-border">
                             <i class="fa-solid ${catIcon} text-accent-pink"></i>
-                            <span>${w.category}</span>
+                            <span>${escapeHtml(w.category)}</span>
                         </span>
                         
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${prioClass}">${w.priority}</span>
-                            <button onclick="deleteWish('${w.id}')" class="text-gray-500 hover:text-rose-400 text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${prioClass}">${escapeHtml(w.priority)}</span>
+                            <button onclick="editWish('${w.id}')" class="text-gray-400 hover:text-brand-400 text-xs transition p-1" title="Editar desejo" aria-label="Editar desejo"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteWish('${w.id}')" class="text-gray-500 hover:text-rose-400 text-xs transition p-1" title="Excluir desejo"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
 
@@ -110,7 +111,7 @@ function renderWishlist() {
                     </button>
 
                     <div class="flex items-center gap-1.5">
-                        ${w.url ? `<a href="${escapeHtml(w.url)}" target="_blank" class="p-1.5 text-gray-400 hover:text-white bg-dark-bg hover:bg-dark-border rounded-lg border border-dark-border text-xs transition" title="Abrir link do produto"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+                        ${w.url ? `<a href="${escapeHtml(w.url)}" target="_blank" rel="noopener noreferrer" class="p-1.5 text-gray-400 hover:text-white bg-dark-bg hover:bg-dark-border rounded-lg border border-dark-border text-xs transition" title="Abrir link do produto"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
                         
                         <button onclick="toggleWishConquered('${w.id}')" class="p-1.5 ${isConquered ? 'bg-brand-500/20 text-brand-400 border-brand-500/40' : 'bg-dark-bg text-gray-400 hover:text-white'} border border-dark-border rounded-lg text-xs transition" title="${isConquered ? 'Marcar como não conquistado' : 'Marcar como conquistado'}">
                             <i class="fa-solid fa-trophy"></i>
@@ -144,4 +145,21 @@ function deleteWish(id) {
 function quickAddSavingsPrompt(id) {
     activeWishSavingsId = id;
     openModal('add-savings');
+}
+
+function editWish(id) {
+ const wish=state.wishlist.find(item=>item.id===id); if(!wish)return;
+ const title=prompt('Nome do desejo:',wish.title); if(title===null)return; if(!title.trim())return alert('O nome não pode ficar vazio.');
+ const targetText=prompt('Valor total da meta (R$):',String(wish.targetAmount)); if(targetText===null)return;
+ const targetAmount=Number(targetText.replace(',','.')); if(!Number.isFinite(targetAmount)||targetAmount<=0)return alert('Informe um valor de meta válido.');
+ const savedText=prompt('Valor já economizado (R$):',String(wish.savedAmount)); if(savedText===null)return;
+ const savedAmount=Number(savedText.replace(',','.')); if(!Number.isFinite(savedAmount)||savedAmount<0)return alert('Informe um valor economizado válido.');
+ const category=prompt('Categoria:',wish.category||'Outros'); if(category===null)return;
+ const priority=prompt('Prioridade (Alta, Média ou Baixa):',wish.priority||'Média'); if(priority===null)return;
+ if(!['Alta','Média','Baixa'].includes(priority.trim()))return alert('Prioridade inválida.');
+ const url=prompt('Link do produto (opcional):',wish.url||''); if(url===null)return;
+ const notes=prompt('Observações:',wish.notes||''); if(notes===null)return;
+ wish.title=title.trim().slice(0,160); wish.targetAmount=targetAmount; wish.savedAmount=Math.min(savedAmount,targetAmount);
+ wish.category=category.trim().slice(0,60)||'Outros'; wish.priority=priority.trim(); wish.url=url.trim(); wish.notes=notes.trim().slice(0,2000); wish.conquered=savedAmount>=targetAmount;
+ saveState();
 }
