@@ -25,11 +25,11 @@ function renderFinances() {
                     </div>
                     <div>
                         <p class="font-bold text-white">${escapeHtml(f.title)}</p>
-                        <p class="text-[10px] text-gray-400">${f.category} • ${f.date}</p>
+                        <p class="text-[10px] text-gray-400">${escapeHtml(f.category)} • ${escapeHtml(f.date)}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="font-bold ${isInc ? 'text-brand-400' : 'text-rose-400'}">${isInc ? '+' : '-'} R$ ${f.amount.toFixed(2)}</span>
+                    <span class="font-bold ${isInc ? 'text-brand-400' : 'text-rose-400'}">${isInc ? '+' : '-'} R$ ${Number(f.amount || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                     <button onclick="deleteFinance('${f.id}')" class="text-gray-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
