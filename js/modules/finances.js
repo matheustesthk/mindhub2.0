@@ -2,8 +2,10 @@
 let finChartInstance = null;
 
 function renderFinances() {
-    const inc = state.finances.filter(f => f.type === 'income').reduce((a, b) => a + b.amount, 0);
-    const exp = state.finances.filter(f => f.type === 'expense').reduce((a, b) => a + b.amount, 0);
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    const monthFinances = state.finances.filter(f => String(f.date || '').slice(0, 7) === currentMonth);
+    const inc = monthFinances.filter(f => f.type === 'income').reduce((a, b) => a + Number(b.amount || 0), 0);
+    const exp = monthFinances.filter(f => f.type === 'expense').reduce((a, b) => a + Number(b.amount || 0), 0);
     const bal = inc - exp;
 
     document.getElementById('fin-income').textContent = `R$ ${inc.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
@@ -37,7 +39,7 @@ function renderFinances() {
     const ctx = document.getElementById('finance-chart-main');
     if (ctx) {
         const categories = {};
-        state.finances.filter(f => f.type === 'expense').forEach(f => {
+        monthFinances.filter(f => f.type === 'expense').forEach(f => {
             categories[f.category] = (categories[f.category] || 0) + f.amount;
         });
 
