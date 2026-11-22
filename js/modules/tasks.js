@@ -66,7 +66,7 @@ function renderTasks() {
                         <input type="checkbox" ${t.status === 'Done' ? 'checked' : ''} onchange="toggleTaskStatus('${t.id}')" class="rounded custom-checkbox w-4 h-4 cursor-pointer">
                         <div>
                             <p class="font-bold text-white ${t.status === 'Done' ? 'line-through text-gray-500' : ''}">${escapeHtml(t.title)}</p>
-                            <p class="text-[10px] text-gray-400">${t.category} • Vencimento: ${t.dueDate}</p>
+                            <p class="text-[10px] text-gray-400">${escapeHtml(t.category)} • Vencimento: ${escapeHtml(t.dueDate)}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -121,4 +121,11 @@ function updateTaskStatus(id, newStatus) {
 function deleteTask(id) {
     state.tasks = state.tasks.filter(t => t.id !== id);
     saveState();
+}
+
+function editTask(id) {
+ const task=state.tasks.find(item=>item.id===id); if(!task)return;
+ const title=prompt('Título da tarefa:',task.title); if(title===null)return; if(!title.trim())return alert('O título não pode ficar vazio.');
+ const category=prompt('Categoria:',task.category||'Geral'); if(category===null)return;
+ task.title=title.trim().slice(0,160); task.category=category.trim().slice(0,60)||'Geral'; saveState();
 }
