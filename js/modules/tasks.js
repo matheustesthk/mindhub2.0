@@ -70,7 +70,8 @@ function renderTasks() {
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${t.priority === 'Alta' ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'}">${t.priority}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${t.priority === 'Alta' ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'}">${escapeHtml(t.priority)}</span>
+                        <button onclick="editTask('${t.id}')" class="text-gray-400 hover:text-brand-400 p-1" title="Editar tarefa"><i class="fa-solid fa-pen"></i></button>
                         <button onclick="deleteTask('${t.id}')" class="text-gray-500 hover:text-rose-400 p-1"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </div>
@@ -88,6 +89,7 @@ function createTaskCard(t) {
     div.innerHTML = `
         <div class="flex items-start justify-between gap-2">
             <span class="text-xs font-bold text-white leading-snug">${escapeHtml(t.title)}</span>
+            <button onclick="editTask('${t.id}')" class="text-gray-400 hover:text-brand-400 text-xs" title="Editar tarefa"><i class="fa-solid fa-pen"></i></button>
             <button onclick="deleteTask('${t.id}')" class="text-gray-500 hover:text-rose-400 text-xs"><i class="fa-solid fa-trash"></i></button>
         </div>
         <div class="flex items-center justify-between pt-1">
