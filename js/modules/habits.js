@@ -43,7 +43,11 @@ function toggleHabitDay(habitId, dayIdx) {
         } else {
             habit.completedDays.push(dayIdx);
         }
-        habit.streak = habit.completedDays.length * 2;
+        const todayIdx = (new Date().getDay() + 6) % 7;
+        const anchorDay = habit.completedDays.includes(todayIdx) ? todayIdx : todayIdx - 1;
+        let streak = 0;
+        for (let day = anchorDay; day >= 0 && habit.completedDays.includes(day); day--) streak++;
+        habit.streak = streak;
         saveState();
     }
 }
