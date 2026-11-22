@@ -24,9 +24,9 @@ function renderNotes() {
                 </div>
                 <div class="pt-2 border-t border-dark-border flex items-center justify-between text-[10px]">
                     <div class="flex gap-1 flex-wrap">
-                        ${n.tags.map(t => `<span class="bg-dark-bg text-gray-400 px-1.5 py-0.5 rounded border border-dark-border">#${t}</span>`).join('')}
+                        ${n.tags.map(t => `<span class="bg-dark-bg text-gray-400 px-1.5 py-0.5 rounded border border-dark-border">#${escapeHtml(t)}</span>`).join('')}
                     </div>
-                    <button onclick="deleteNote('${n.id}')" class="text-gray-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="editNote('${n.id}')" class="text-gray-400 hover:text-brand-400" title="Editar nota"><i class="fa-solid fa-pen"></i></button><button onclick="deleteNote('${n.id}')" class="text-gray-500 hover:text-rose-400"><i class="fa-solid fa-trash"></i></button>
                 </div>
             </div>
         `;
@@ -44,4 +44,12 @@ function toggleFavoriteNote(id) {
 function deleteNote(id) {
     state.notes = state.notes.filter(n => n.id !== id);
     saveState();
+}
+
+function editNote(id) {
+ const note=state.notes.find(item=>item.id===id); if(!note)return;
+ const title=prompt('Título da nota:',note.title); if(title===null)return; if(!title.trim())return alert('O título não pode ficar vazio.');
+ const content=prompt('Conteúdo da nota:',note.content); if(content===null)return;
+ const tags=prompt('Tags separadas por vírgula:',note.tags.join(', ')); if(tags===null)return;
+ note.title=title.trim().slice(0,160); note.content=content.trim().slice(0,12000); note.tags=tags.split(',').map(tag=>tag.trim()).filter(Boolean).slice(0,20); saveState();
 }
