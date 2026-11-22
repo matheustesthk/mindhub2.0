@@ -17,6 +17,13 @@ function setTaskView(view) {
     renderTasks();
 }
 
+function formatTaskDueDate(value) {
+    if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return '';
+    const [year, month, day] = value.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return '';
+    return date.toLocaleDateString('pt-BR');
+}
 function renderTasks() {
     const search = document.getElementById('task-search').value.toLowerCase();
     const prioFilter = document.getElementById('task-filter-priority').value;
@@ -66,7 +73,7 @@ function renderTasks() {
                         <input type="checkbox" ${t.status === 'Done' ? 'checked' : ''} onchange="toggleTaskStatus('${t.id}')" class="rounded custom-checkbox w-4 h-4 cursor-pointer">
                         <div>
                             <p class="font-bold text-white ${t.status === 'Done' ? 'line-through text-gray-500' : ''}">${escapeHtml(t.title)}</p>
-                            <p class="text-[10px] text-gray-400">${escapeHtml(t.category)} • Vencimento: ${escapeHtml(t.dueDate)}</p>
+                            <p class="text-[10px] text-gray-400">${escapeHtml(t.category)} • Vencimento: ${formatTaskDueDate(t.dueDate)}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2">
@@ -126,8 +133,6 @@ function deleteTask(id) {
 }
 
 function editTask(id) {
- const task=state.tasks.find(item=>item.id===id); if(!task)return;
- const title=prompt('Título da tarefa:',task.title); if(title===null)return; if(!title.trim())return alert('O título não pode ficar vazio.');
- const category=prompt('Categoria:',task.category||'Geral'); if(category===null)return;
- task.title=title.trim().slice(0,160); task.category=category.trim().slice(0,60)||'Geral'; saveState();
+    if (!state.tasks.some(task => task.id === id)) return;
+    openModal('edit-task', id);
 }
