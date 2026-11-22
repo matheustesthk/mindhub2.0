@@ -48,7 +48,7 @@ function openModal(type, taskId = null) {
                 <div><label class="text-xs text-gray-400 font-semibold">Prioridade</label><select name="priority" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"><option value="Alta" ${task.priority === 'Alta' ? 'selected' : ''}>Alta</option><option value="Média" ${task.priority === 'Média' ? 'selected' : ''}>Média</option><option value="Baixa" ${task.priority === 'Baixa' ? 'selected' : ''}>Baixa</option></select></div>
                 <div><label class="text-xs text-gray-400 font-semibold">Categoria</label><input type="text" name="category" maxlength="60" value="${escapeHtml(task.category || 'Geral')}" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"></div>
             </div>
-            <div><label class="text-xs text-gray-400 font-semibold">Data de vencimento (opcional)</label><input type="date" name="dueDate" value="${/^\\d{4}-\\d{2}-\\d{2}$/.test(task.dueDate || '') ? task.dueDate : ''}" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"></div>
+            <div><label class="text-xs text-gray-400 font-semibold">Data de vencimento (opcional)</label><input type="date" name="dueDate" value="${/^\d{4}-\d{2}-\d{2}$/.test(task.dueDate || '') ? task.dueDate : ''}" class="w-full bg-dark-bg border border-dark-border rounded-lg p-2 text-xs text-white mt-1"></div>
         `;
     } else if (type === 'finance') {
         title.textContent = 'Nova Transação';
