@@ -64,11 +64,11 @@ function renderWishlist() {
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5 bg-dark-bg px-2.5 py-1 rounded-md border border-dark-border">
                             <i class="fa-solid ${catIcon} text-accent-pink"></i>
-                            <span>${w.category}</span>
+                            <span>${escapeHtml(w.category)}</span>
                         </span>
                         
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${prioClass}">${w.priority}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${prioClass}">${escapeHtml(w.priority)}</span>
                             <button onclick="deleteWish('${w.id}')" class="text-gray-500 hover:text-rose-400 text-xs transition"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ function renderWishlist() {
                     </button>
 
                     <div class="flex items-center gap-1.5">
-                        ${w.url ? `<a href="${escapeHtml(w.url)}" target="_blank" class="p-1.5 text-gray-400 hover:text-white bg-dark-bg hover:bg-dark-border rounded-lg border border-dark-border text-xs transition" title="Abrir link do produto"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
+                        ${w.url ? `<a href="${escapeHtml(w.url)}" target="_blank" rel="noopener noreferrer" class="p-1.5 text-gray-400 hover:text-white bg-dark-bg hover:bg-dark-border rounded-lg border border-dark-border text-xs transition" title="Abrir link do produto"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
                         
                         <button onclick="toggleWishConquered('${w.id}')" class="p-1.5 ${isConquered ? 'bg-brand-500/20 text-brand-400 border-brand-500/40' : 'bg-dark-bg text-gray-400 hover:text-white'} border border-dark-border rounded-lg text-xs transition" title="${isConquered ? 'Marcar como não conquistado' : 'Marcar como conquistado'}">
                             <i class="fa-solid fa-trophy"></i>
